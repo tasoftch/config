@@ -1,0 +1,24 @@
+{
+    "name": "tasoft/config",
+    "description": "Configuration extension to set up configurations.",
+  "minimum-stability": "dev",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+	    "psr-4": {
+		    "TASoft\\Config\\": "src/"
+	    }
+    },
+  "authors": [
+    {
+      "name": "Thomas Abplanalp",
+      "email": "thomas@tasoft.ch"
+    }
+  ],
+  "require": {
+    "php": ">=7.1.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": ">=6.0"
+  }
+}
