@@ -41,7 +41,9 @@ class Config implements Countable, Iterator, ArrayAccess, \Serializable {
      * @var string
      */
     private $prefix;
-
+    /**
+     * @var bool
+     */
     private $transformsToConfig = true;
 
 
@@ -186,7 +188,7 @@ class Config implements Countable, Iterator, ArrayAccess, \Serializable {
      */
     public function next()
     {
-    next($this->data);
+        next($this->data);
     }
 
     /**
@@ -242,7 +244,8 @@ class Config implements Countable, Iterator, ArrayAccess, \Serializable {
     }
 
     /**
-     * Merges the passed configuration with the instance. It will add and/or overwrite the properties of the instance with the passed matching properties of merge.
+     * Merges the passed configuration with the instance.
+     * It will add and/or overwrite the properties of the instance with the passed matching properties of merge.
      *
      * @param Config $merge
      * @return $this
@@ -290,10 +293,18 @@ class Config implements Countable, Iterator, ArrayAccess, \Serializable {
         $this->transformsToConfig = $transformsToConfig;
     }
 
-
+    /**
+     * Internal method to convert any value to a new configuration object if required.
+     *
+     * @internal
+     * @param $value
+     * @param $key
+     * @param $prefix
+     * @return Config
+     */
     private function _convertedValue($value, $key, $prefix) {
         if($this->getTransformsToConfig()) {
-            if(is_array($value) || $value instanceof \Traversable)
+            if(is_iterable($value))
                 $value = new static($value, $prefix ? "$prefix.$key" : $key, true);
         }
         return $value;
@@ -311,6 +322,4 @@ class Config implements Countable, Iterator, ArrayAccess, \Serializable {
     {
         list($this->prefix, $this->transformsToConfig, $this->data) = unserialize($serialized);
     }
-
-
 }
