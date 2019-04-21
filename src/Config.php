@@ -26,13 +26,15 @@ namespace TASoft\Config;
 use ArrayAccess;
 use Countable;
 use Iterator;
+use Serializable;
 use TASoft\Config\Controller\AbstractController;
+use Traversable;
 
 /**
  * The configuration container
  * @package TASoft\Config
  */
-class Config implements Countable, Iterator, ArrayAccess, \Serializable {
+class Config implements Countable, Iterator, ArrayAccess, Serializable {
     /**
      * @var array
      */
@@ -72,7 +74,7 @@ class Config implements Countable, Iterator, ArrayAccess, \Serializable {
     {
         $this->setTransformsToConfig($transformChildConfigurations);
 
-        if(is_array($array) || $array instanceof \Traversable) {
+        if(is_array($array) || $array instanceof Traversable) {
             foreach ($array as $key => $value) {
                 $this->data[$key] = $this->_convertedValue($value, $key, $prefix);
             }
@@ -82,14 +84,27 @@ class Config implements Countable, Iterator, ArrayAccess, \Serializable {
     }
 
     /**
+     * Get all keys from configuration
      * @return array
      */
     public function getKeys() {
 	    return array_keys($this->data);
     }
 
+    /**
+     * Get all values from configuration
+     * @return array
+     */
     public function getValues() {
         return array_values($this->data);
+    }
+
+    /**
+     * Get internal configuration
+     * @return array
+     */
+    public function getAll() {
+        return $this->data;
     }
 
     /**
@@ -315,7 +330,7 @@ class Config implements Countable, Iterator, ArrayAccess, \Serializable {
      */
     public function serialize()
     {
-        return \serialize([$this->prefix, $this->transformsToConfig, $this->data]);
+        return serialize([$this->prefix, $this->transformsToConfig, $this->data]);
     }
 
     public function unserialize($serialized)
