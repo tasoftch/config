@@ -185,9 +185,7 @@ class Config implements Countable, Iterator, ArrayAccess, Serializable {
     public function current()
     {
         $value = current($this->data);
-        if($value)
-            return AbstractController::_tasoft_priv_getValue($this, $this->key(), $value);
-        return NULL;
+        return AbstractController::_tasoft_priv_getValue($this, $this->key(), $value);
     }
 
     /**
