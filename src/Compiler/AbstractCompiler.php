@@ -23,7 +23,9 @@
 
 namespace TASoft\Config\Compiler;
 
+use RecursiveIterator;
 use TASoft\Config\Config;
+use Traversable;
 
 abstract class AbstractCompiler implements CompilerInterface {
 	protected $saveMode = 'php';
@@ -33,12 +35,12 @@ abstract class AbstractCompiler implements CompilerInterface {
 	}
 	public function getSaveMode() { return $this->saveMode; }
 	
-	private function _collectFilePaths(array &$outPaths, \Traversable $traversable) {
+	private function _collectFilePaths(array &$outPaths, Traversable $traversable) {
 		foreach($traversable as $source) {
 			if($source)
 				$outPaths[] = $source;
 			
-			if($traversable instanceof \RecursiveIterator && $traversable->hasChildren()) {
+			if($traversable instanceof RecursiveIterator && $traversable->hasChildren()) {
 				$this->_collectFilePaths($outPaths, $traversable->getChildren());
 			}
 		}
@@ -81,7 +83,7 @@ abstract class AbstractCompiler implements CompilerInterface {
 			$data = @include($path);
 			if(is_array($data) && count($data)) {
 				$cfg = new Config($data);
-				$config->merge($cfg);
+				$this->mergeConfiguration($config, $cfg);
 			}
 		}
 		
@@ -97,7 +99,17 @@ return $data;
 		
 		return true;
 	}
+
+    /**
+     * Called to merge all configuration into one collected
+     *
+     * @param Config $collected
+     * @param Config $new
+     */
+	protected function mergeConfiguration(Config $collected, Config $new) {
+        $collected->merge($new);
+    }
 	
 	abstract public function getCompiledTargetFilename(): string;
-	abstract public function getCompilerSource(): \Traversable;
+	abstract public function getCompilerSource(): Traversable;
 }
