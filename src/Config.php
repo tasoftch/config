@@ -28,7 +28,6 @@ use Countable;
 use Iterator;
 use Serializable;
 use TASoft\Config\Controller\AbstractController;
-use Traversable;
 
 /**
  * The configuration container
@@ -67,14 +66,14 @@ class Config implements Countable, Iterator, ArrayAccess, Serializable {
 
     /**
      * Config constructor.
-     * @param array $array
+     * @param iterable $array
      * @param string $prefix
      */
-    public function __construct(array $array = NULL, string $prefix = "", bool $transformChildConfigurations = true)
+    public function __construct(iterable $array = NULL, string $prefix = "", bool $transformChildConfigurations = true)
     {
         $this->setTransformsToConfig($transformChildConfigurations);
 
-        if(is_array($array) || $array instanceof Traversable) {
+        if(is_iterable($array)) {
             foreach ($array as $key => $value) {
                 $this->data[$key] = $this->_convertedValue($value, $key, $prefix);
             }
