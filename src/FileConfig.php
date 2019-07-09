@@ -35,7 +35,7 @@ class FileConfig extends Config
      */
     public function __construct($filename, string $prefix = "", bool $transformChildConfigurations = true)
     {
-        if(is_file($filename)) {
+        if(is_string($filename) && is_file($filename)) {
             $array = @ include $filename;
         } elseif(is_iterable($filename))
             $array = $filename;
