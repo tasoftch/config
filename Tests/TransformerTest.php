@@ -6,8 +6,6 @@
  * Created on 11.04.18 20:30 by thomas
  */
 
-namespace TASoft\Config\Controller;
-
 use PHPUnit\Framework\TestCase;
 use TASoft\Config\Transformer\Callback;
 use TASoft\Config\Transformer\Literal;

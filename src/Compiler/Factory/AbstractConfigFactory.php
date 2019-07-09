@@ -15,7 +15,7 @@ abstract class AbstractConfigFactory implements FactoryInterface
      */
     public function toConfig(): Config
     {
-        return $this->getConfig();
+        return $this->makeConfiguration( $this->getConfig() );
     }
 
     /**
@@ -25,7 +25,6 @@ abstract class AbstractConfigFactory implements FactoryInterface
     {
         if(!$this->config) {
             $this->config = new Config();
-
         }
 
         return $this->config;
@@ -43,7 +42,7 @@ abstract class AbstractConfigFactory implements FactoryInterface
      * Called on demand to create the real configuration
      *
      * @param Config $configuration
-     * @return void
+     * @return Config
      */
-    abstract protected function makeConfiguration(Config $configuration);
+    abstract protected function makeConfiguration(Config $configuration): Config;
 }

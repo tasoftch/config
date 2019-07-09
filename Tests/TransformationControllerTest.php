@@ -5,11 +5,9 @@
  *
  * Created on 11.04.18 20:16 by thomas
  */
-
-namespace TASoft\Config\Controller;
-
 use PHPUnit\Framework\TestCase;
 use TASoft\Config\Config;
+use TASoft\Config\Controller\TransformationController;
 use TASoft\Config\Transformer\TransformerInterface;
 
 class TransformationControllerTest extends TestCase
