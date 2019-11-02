@@ -38,9 +38,6 @@ abstract class AbstractCompiler implements CompilerInterface {
 		$allPaths = [];
 		$this->_collectFilePaths($allPaths, $traversable);
 		
-		$target = $this->getCompiledTargetFilename();
-		$tgRef = realpath($target);
-		
 		$config = new Config([]);
 		
 		$files = [];
@@ -48,8 +45,6 @@ abstract class AbstractCompiler implements CompilerInterface {
 		$allPaths = array_unique($allPaths);
 		
 		foreach($allPaths as $idx => $path) {
-			if($path == $tgRef)
-				continue;
 			$files[] = $path;
 			
 			$data = @include($path);
@@ -87,7 +82,4 @@ abstract class AbstractCompiler implements CompilerInterface {
 	protected function mergeConfiguration(Config $collected, Config $new) {
         $collected->merge($new);
     }
-	
-	abstract public function getCompiledTargetFilename(): string;
-	abstract public function getCompilerSource(): Traversable;
 }

@@ -23,34 +23,73 @@
 
 namespace TASoft\Config\Compiler;
 
+use InvalidArgumentException;
+use TASoft\Config\Compiler\Target\FileTarget;
+use TASoft\Config\Compiler\Target\TargetInterface;
+use Traversable;
+
 class StandardCompiler extends AbstractCompiler {
+    /** @var TargetInterface|string */
 	private $target;
+	/** @var Traversable */
 	private $source;
 	
 	public function __construct($target = NULL) {
-		if(is_string($target))
-			$this->setTarget($target);
+		$this->setTarget($target);
 	}
-	
-	public function setTarget(string $target) {
-		$this->target = $target;
-	}
-	public function getTarget(): ? string {
-		return $this->target;
-	}
-	
-	public function setSource(\Traversable $source) {
-		$this->source = $source;
-	}
-	public function getSource(): ? \Traversable {
-		return $this->source;
-	}
-	
-	
-	public function getCompiledTargetFilename(): string {
-		return $this->getTarget();
-	}
-	public function getCompilerSource(): \Traversable {
+
+    /**
+     * @inheritDoc
+     */
+    public function getCompilerTarget(): TargetInterface
+    {
+        return $this->getTarget();
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+	public function getCompilerSource(): Traversable {
 		return $this->getSource();
 	}
+
+    /**
+     * @return string|TargetInterface
+     */
+    public function getTarget()
+    {
+        return $this->target;
+    }
+
+    /**
+     * @param string|TargetInterface $target
+     */
+    public function setTarget($target): void
+    {
+        if(is_string($target)) {
+            $target = new FileTarget($target);
+        }
+
+        if($target instanceof TargetInterface)
+            $this->target = $target;
+        else
+            throw new InvalidArgumentException("Invalid target");
+    }
+
+    /**
+     * @return Traversable
+     */
+    public function getSource(): Traversable
+    {
+        return $this->source;
+    }
+
+    /**
+     * @param Traversable $source
+     */
+    public function setSource(Traversable $source): void
+    {
+        $this->source = $source;
+    }
 }
