@@ -21,30 +21,31 @@
  * SOFTWARE.
  */
 
-namespace TASoft\Config\Compiler;
+namespace TASoft\Config\Compiler\Target;
 
-use TASoft\Config\Compiler\Target\TargetInterface;
-use Traversable;
 
-interface CompilerInterface {
-    /**
-     * Compiles the source to target
-     *
-     * @return bool
-     */
-	public function compile(): bool;
+use TASoft\Config\Config;
+
+class InMemoryTarget implements TargetInterface
+{
+    private $configuration;
+    private $files;
 
     /**
-     * Source to obtain config to compile
-     *
-     * @return Traversable
+     * InMemoryTarget constructor.
+     * @param $configuration
+     * @param $files
      */
-    public function getCompilerSource(): Traversable;
+    public function __construct(&$configuration, &$files)
+    {
+        $this->configuration = &$configuration;
+        $this->files = &$files;
+    }
 
-    /**
-     * Target to compile to
-     *
-     * @return TargetInterface
-     */
-	public function getCompilerTarget(): TargetInterface;
+
+    public function export(Config $finalConfiguration, array $importedFiles)
+    {
+        $this->configuration = $finalConfiguration;
+        $this->files = $importedFiles;
+    }
 }

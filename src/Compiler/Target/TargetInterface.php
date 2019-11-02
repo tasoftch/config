@@ -21,30 +21,22 @@
  * SOFTWARE.
  */
 
-namespace TASoft\Config\Compiler;
+namespace TASoft\Config\Compiler\Target;
 
-use TASoft\Config\Compiler\Target\TargetInterface;
-use Traversable;
+use TASoft\Config\Config;
 
-interface CompilerInterface {
+/**
+ * A target is an object that handles the compilers output
+ * @package TASoft\Config\Compiler\Target
+ */
+interface TargetInterface
+{
     /**
-     * Compiles the source to target
+     * Exports the compiled configuration to target.
      *
-     * @return bool
+     * @param Config $finalConfiguration
+     * @param array $importedFiles
+     * @return void
      */
-	public function compile(): bool;
-
-    /**
-     * Source to obtain config to compile
-     *
-     * @return Traversable
-     */
-    public function getCompilerSource(): Traversable;
-
-    /**
-     * Target to compile to
-     *
-     * @return TargetInterface
-     */
-	public function getCompilerTarget(): TargetInterface;
+    public function export(Config $finalConfiguration, array $importedFiles);
 }

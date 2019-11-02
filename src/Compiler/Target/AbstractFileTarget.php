@@ -21,30 +21,47 @@
  * SOFTWARE.
  */
 
-namespace TASoft\Config\Compiler;
+namespace TASoft\Config\Compiler\Target;
 
-use TASoft\Config\Compiler\Target\TargetInterface;
-use Traversable;
 
-interface CompilerInterface {
-    /**
-     * Compiles the source to target
-     *
-     * @return bool
-     */
-	public function compile(): bool;
+use TASoft\Config\Config;
+
+abstract class AbstractFileTarget implements TargetInterface
+{
+    private $filename;
 
     /**
-     * Source to obtain config to compile
-     *
-     * @return Traversable
+     * FileTarget constructor.
+     * @param $filename
      */
-    public function getCompilerSource(): Traversable;
+    public function __construct($filename)
+    {
+        $this->filename = $filename;
+    }
 
     /**
-     * Target to compile to
-     *
-     * @return TargetInterface
+     * @inheritDoc
      */
-	public function getCompilerTarget(): TargetInterface;
+    public function export(Config $finalConfiguration, array $importedFiles)
+    {
+        $data = $this->serialize($finalConfiguration, $importedFiles);
+        file_put_contents($this->getFilename(), $data);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFilename()
+    {
+        return $this->filename;
+    }
+
+    /**
+     * This method should serialize the compilation
+     *
+     * @param Config $config
+     * @param array $importedFiles
+     * @return string
+     */
+    abstract protected function serialize(Config $config, array $importedFiles): string;
 }
