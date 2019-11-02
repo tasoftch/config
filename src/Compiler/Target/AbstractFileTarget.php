@@ -42,10 +42,10 @@ abstract class AbstractFileTarget implements TargetInterface
     /**
      * @inheritDoc
      */
-    public function export(Config $finalConfiguration, array $importedFiles)
+    public function export(Config $finalConfiguration, array $importedFiles): bool
     {
         $data = $this->serialize($finalConfiguration, $importedFiles);
-        file_put_contents($this->getFilename(), $data);
+        return file_put_contents($this->getFilename(), $data) ? true : false;
     }
 
     /**

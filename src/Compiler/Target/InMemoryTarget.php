@@ -43,9 +43,10 @@ class InMemoryTarget implements TargetInterface
     }
 
 
-    public function export(Config $finalConfiguration, array $importedFiles)
+    public function export(Config $finalConfiguration, array $importedFiles): bool
     {
         $this->configuration = $finalConfiguration;
         $this->files = $importedFiles;
+        return true;
     }
 }

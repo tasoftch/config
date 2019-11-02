@@ -36,7 +36,7 @@ interface TargetInterface
      *
      * @param Config $finalConfiguration
      * @param array $importedFiles
-     * @return void
+     * @return bool
      */
-    public function export(Config $finalConfiguration, array $importedFiles);
+    public function export(Config $finalConfiguration, array $importedFiles): bool;
 }
