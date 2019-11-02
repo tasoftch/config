@@ -28,38 +28,10 @@ use TASoft\Config\Config;
 use Traversable;
 
 abstract class AbstractCompiler implements CompilerInterface {
-	protected $saveMode = 'php';
-	
-	public function setSaveMode($mode = 'php') {
-		$this->saveMode = $mode;
-	}
-	public function getSaveMode() { return $this->saveMode; }
-	
-	private function _collectFilePaths(array &$outPaths, Traversable $traversable) {
-		foreach($traversable as $source) {
-			if($source)
-				$outPaths[] = $source;
-			
-			if($traversable instanceof RecursiveIterator && $traversable->hasChildren()) {
-				$this->_collectFilePaths($outPaths, $traversable->getChildren());
-			}
-		}
-	}
-	
-	
-	protected function packConfigArray(array $config): string {
-		switch($this->saveMode) {
-			case 'base64':
-				$data = base64_encode( serialize($config) );
-				//$data = str_replace('\"', '\\"', $data);
-				//$data = str_replace('"', '\"', $data);
-				return "unserialize( base64_decode ( \"$data\" ) )";
-			default:
-				return var_export($config, true);
-		}
-	}
-	
-	
+
+    /**
+     * @inheritDoc
+     */
 	public function compile(): bool {
 		$traversable = $this->getCompilerSource();
 		
@@ -71,14 +43,14 @@ abstract class AbstractCompiler implements CompilerInterface {
 		
 		$config = new Config([]);
 		
-		$files = "";
+		$files = [];
 		
 		$allPaths = array_unique($allPaths);
 		
 		foreach($allPaths as $idx => $path) {
 			if($path == $tgRef)
 				continue;
-			$files .= " *	".($idx+1) .".	$path\n";
+			$files[] = $path;
 			
 			$data = @include($path);
 			if(is_array($data) && count($data)) {
@@ -86,19 +58,25 @@ abstract class AbstractCompiler implements CompilerInterface {
 				$this->mergeConfiguration($config, $cfg);
 			}
 		}
-		
-		$array = $config->toArray();
-		$data = $this->packConfigArray($array);
-		file_put_contents($target, "<?php
-/*
- *	== TASoft Config Compiler == 
- * 	Compiled from:
-$files */
-return $data;
-?>");
-		
-		return true;
+
+		return $this->getCompilerTarget()->export( $config,  $files);
 	}
+
+    /**
+     * @param array $outPaths
+     * @param Traversable $traversable
+     * @internal
+     */
+    private function _collectFilePaths(array &$outPaths, Traversable $traversable) {
+        foreach($traversable as $source) {
+            if($source)
+                $outPaths[] = $source;
+
+            if($traversable instanceof RecursiveIterator && $traversable->hasChildren()) {
+                $this->_collectFilePaths($outPaths, $traversable->getChildren());
+            }
+        }
+    }
 
     /**
      * Called to merge all configuration into one collected
