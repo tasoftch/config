@@ -24,37 +24,74 @@
 namespace TASoft\Config\Compiler;
 
 
+use InvalidArgumentException;
+use TASoft\Config\Compiler\Target\FileTarget;
+use TASoft\Config\Compiler\Target\TargetInterface;
 use Traversable;
 
 class StandardFactoryCompiler extends AbstractFactoryCompiler
 {
+    /** @var TargetInterface|string */
     private $target;
+    /** @var Traversable */
     private $source;
 
     public function __construct($target = NULL) {
-        if(is_string($target))
-            $this->setTarget($target);
+        $this->setTarget($target);
     }
 
-    public function setTarget(string $target) {
-        $this->target = $target;
+    /**
+     * @inheritDoc
+     */
+    public function getCompilerTarget(): TargetInterface
+    {
+        return $this->getTarget();
     }
-    public function getTarget(): ? string {
+
+
+    /**
+     * @inheritDoc
+     */
+    public function getCompilerSource(): Traversable {
+        return $this->getSource();
+    }
+
+    /**
+     * @return string|TargetInterface
+     */
+    public function getTarget()
+    {
         return $this->target;
     }
 
-    public function setSource(Traversable $source) {
-        $this->source = $source;
+    /**
+     * @param string|TargetInterface $target
+     */
+    public function setTarget($target): void
+    {
+        if(is_string($target)) {
+            $target = new FileTarget($target);
+        }
+
+        if($target instanceof TargetInterface)
+            $this->target = $target;
+        else
+            throw new InvalidArgumentException("Invalid target");
     }
-    public function getSource(): ? Traversable {
+
+    /**
+     * @return Traversable
+     */
+    public function getSource(): Traversable
+    {
         return $this->source;
     }
 
-
-    public function getCompiledTargetFilename(): string {
-        return $this->getTarget();
-    }
-    public function getCompilerSource(): Traversable {
-        return $this->getSource();
+    /**
+     * @param Traversable $source
+     */
+    public function setSource(Traversable $source): void
+    {
+        $this->source = $source;
     }
 }
