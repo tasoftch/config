@@ -1,7 +1,6 @@
 {
     "name": "tasoft/config",
     "description": "Configuration extension to set up configurations.",
-  "minimum-stability": "dev",
     "type": "library",
     "license": "MIT",
     "autoload": {
