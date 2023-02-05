@@ -23,6 +23,9 @@
 
 namespace TASoft\Config\Compiler\Source;
 
+use DirectoryIterator;
+use ReturnTypeWillChange;
+
 class DirectorySource implements SourceInterface {
 	private $pattern;
 	private $recursive;
@@ -33,7 +36,7 @@ class DirectorySource implements SourceInterface {
 		$this->pattern = $globPattern;
 		$this->recursive = $recursive;
 		
-		$this->iterator = new \DirectoryIterator($source);
+		$this->iterator = new DirectoryIterator($source);
 	}
 	
 	
@@ -44,15 +47,15 @@ class DirectorySource implements SourceInterface {
 	}
 	
 	
-	public function rewind() {
+	#[ReturnTypeWillChange] public function rewind() {
 		$this->iterator->rewind();
 	}
 	
-	public function next() {
+	#[ReturnTypeWillChange] public function next() {
 		$this->iterator->next();
 	}
 	
-	public function valid() {
+	#[ReturnTypeWillChange] public function valid() {
 		while($this->iterator->valid()) {
 			$fn = $this->iterator->current()->getFilename();
 			if($fn =='.' || $fn == '..') {
@@ -70,17 +73,17 @@ class DirectorySource implements SourceInterface {
 		return false;
 	}
 	
-	public function current() {
+	#[ReturnTypeWillChange] public function current() {
 		$pn = realpath($this->iterator->current()->getPathname());
 		return is_file($pn) ? $pn : NULL;
 	}
 	
-	public function key() {
+	#[ReturnTypeWillChange] public function key() {
 		return $this->iterator->key();
 	}
 	
-	public function hasChildren() { return $this->recursive && $this->iterator->isDir(); }
-	public function getChildren() {
+	#[ReturnTypeWillChange] public function hasChildren() { return $this->recursive && $this->iterator->isDir(); }
+	#[ReturnTypeWillChange] public function getChildren() {
 		$cn = get_class($this);
 		return new $cn($this->iterator->current()->getPathname(), true, $this->pattern);
 	}

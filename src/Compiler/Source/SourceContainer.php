@@ -23,6 +23,8 @@
 
 namespace TASoft\Config\Compiler\Source;
 
+use ReturnTypeWillChange;
+
 class SourceContainer implements SourceInterface {
 	private $members=[];
 	private $pos;
@@ -32,26 +34,26 @@ class SourceContainer implements SourceInterface {
 			$this->members[] = $source;
 	}
 	
-	public function rewind() {
+	#[ReturnTypeWillChange] public function rewind() {
 		$this->pos=0;
 	}
 	
-	public function next() {
+	#[ReturnTypeWillChange] public function next() {
 		$this->pos++;
 	}
 	
-	public function valid() {
+	#[ReturnTypeWillChange] public function valid() {
 		return isset($this->members[$this->pos]);
 	}
 	
-	public function current() {
+	#[ReturnTypeWillChange] public function current() {
 		return NULL;
 	}
 	
-	public function key() {
+	#[ReturnTypeWillChange] public function key() {
 		return NULL;
 	}
 	
-	public function hasChildren() { return $this->valid(); }
-	public function getChildren() { return $this->members[$this->pos]; }
+	#[ReturnTypeWillChange] public function hasChildren() { return $this->valid(); }
+	#[ReturnTypeWillChange] public function getChildren() { return $this->members[$this->pos]; }
 }

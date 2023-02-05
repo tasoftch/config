@@ -23,6 +23,8 @@
 
 namespace TASoft\Config\Compiler\Source;
 
+use ReturnTypeWillChange;
+
 class FileGroupSource implements SourceInterface {
 	private $members = [];
 	private $pos;
@@ -34,30 +36,30 @@ class FileGroupSource implements SourceInterface {
 			if(!in_array($fn, $this->members))
 				$this->members[] = $fn;
 		} else {
-			trigger_error("Could not locate file '$filename'", E_USER_NOTICE);
+			trigger_error("Could not locate file '$filename'");
 		}
 	}
 	
-	public function rewind() {
+	#[ReturnTypeWillChange] public function rewind() {
 		$this->pos = 0;
 	}
 	
-	public function next() {
+	#[ReturnTypeWillChange] public function next() {
 		$this->pos++;
 	}
 	
-	public function valid() {
+	#[ReturnTypeWillChange] public function valid() {
 		return isset($this->members[$this->pos]);
 	}
 	
-	public function current() {
+	#[ReturnTypeWillChange] public function current() {
 		return $this->members[$this->pos];
 	}
 	
-	public function key() {
+	#[ReturnTypeWillChange] public function key() {
 		return $this->pos;
 	}
 	
-	public function hasChildren() { return false; }
-	public function getChildren() { return NULL; }
+	#[ReturnTypeWillChange] public function hasChildren() { return false; }
+	#[ReturnTypeWillChange] public function getChildren() { return NULL; }
 }

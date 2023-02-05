@@ -23,4 +23,6 @@
 
 namespace TASoft\Config\Compiler;
 
-class BadSourceException extends \Exception {}
+use Exception;
+
+class BadSourceException extends Exception {}

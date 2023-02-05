@@ -26,6 +26,7 @@ namespace TASoft\Config;
 use ArrayAccess;
 use Countable;
 use Iterator;
+use ReturnTypeWillChange;
 use Serializable;
 use TASoft\Config\Controller\AbstractController;
 
@@ -33,7 +34,7 @@ use TASoft\Config\Controller\AbstractController;
  * The configuration container
  * @package TASoft\Config
  */
-class Config implements Countable, Iterator, ArrayAccess, Serializable {
+class Config implements Countable, Iterator, ArrayAccess {
     /**
      * @var array
      */
@@ -153,8 +154,8 @@ class Config implements Countable, Iterator, ArrayAccess, Serializable {
      * @param bool $recursive Converts containing configurations recursive as well.
      * @return array
      */
-    public function toArray($recursive = true)
-    {
+    public function toArray($recursive = true): array
+	{
         $array = [];
         $data  = $this->data;
 
@@ -173,15 +174,15 @@ class Config implements Countable, Iterator, ArrayAccess, Serializable {
     /**
      * @inheritdoc
      */
-    public function count()
-    {
-        return count($this->data);
-    }
+    public function count(): int
+	{
+		return count($this->data);
+	}
 
     /**
      * @inheritdoc
      */
-    public function current()
+    public function current(): mixed
     {
         $value = current($this->data);
         return AbstractController::_tasoft_priv_getValue($this, $this->key(), $value);
@@ -190,15 +191,15 @@ class Config implements Countable, Iterator, ArrayAccess, Serializable {
     /**
      * @inheritdoc
      */
-    public function key()
-    {
+    public function key(): string|int|null
+	{
         return key($this->data);
     }
 
     /**
      * @inheritdoc
      */
-    public function next()
+    public function next(): void
     {
         next($this->data);
     }
@@ -206,7 +207,7 @@ class Config implements Countable, Iterator, ArrayAccess, Serializable {
     /**
      * @inheritdoc
      */
-    public function rewind()
+    #[ReturnTypeWillChange] public function rewind()
     {
         reset($this->data);
     }
@@ -214,7 +215,7 @@ class Config implements Countable, Iterator, ArrayAccess, Serializable {
     /**
      * @inheritdoc
      */
-    public function valid()
+    #[ReturnTypeWillChange] public function valid()
     {
         return ($this->key() !== null);
     }
@@ -222,7 +223,7 @@ class Config implements Countable, Iterator, ArrayAccess, Serializable {
     /**
      * @inheritdoc
      */
-    public function offsetExists($offset)
+    #[ReturnTypeWillChange] public function offsetExists($offset)
     {
         return $this->__isset($offset);
     }
@@ -230,7 +231,7 @@ class Config implements Countable, Iterator, ArrayAccess, Serializable {
     /**
      * @inheritdoc
      */
-    public function offsetGet($offset)
+    #[ReturnTypeWillChange] public function offsetGet($offset)
     {
         return $this->__get($offset);
     }
@@ -238,7 +239,7 @@ class Config implements Countable, Iterator, ArrayAccess, Serializable {
     /**
      * @inheritdoc
      */
-    public function offsetSet($offset, $value)
+    #[ReturnTypeWillChange] public function offsetSet($offset, $value)
     {
         if(is_null($value) && isset($this->data[$offset]))
             unset($this->data[$offset]);
@@ -250,7 +251,7 @@ class Config implements Countable, Iterator, ArrayAccess, Serializable {
     /**
      * @inheritdoc
      */
-    public function offsetUnset($offset)
+    #[ReturnTypeWillChange] public function offsetUnset($offset)
     {
         unset($this->data[$offset]);
     }
@@ -327,11 +328,21 @@ class Config implements Countable, Iterator, ArrayAccess, Serializable {
      */
     public function serialize()
     {
-        return serialize([$this->prefix, $this->transformsToConfig, $this->data]);
+
     }
 
     public function unserialize($serialized)
     {
-        list($this->prefix, $this->transformsToConfig, $this->data) = unserialize($serialized);
+
     }
+
+	public function __serialize(): array
+	{
+		return [$this->prefix, $this->transformsToConfig, $this->data];
+	}
+
+	public function __unserialize(array $data): void
+	{
+		list($this->prefix, $this->transformsToConfig, $this->data) = $data;
+	}
 }

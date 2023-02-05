@@ -23,6 +23,9 @@
 
 namespace TASoft\Config\Compiler\Source;
 
+use ReturnTypeWillChange;
+use TASoft\Config\Compiler\BadSourceException;
+
 class FileSource implements SourceInterface {
 	private $path;
 	private $pos = 0;
@@ -30,31 +33,31 @@ class FileSource implements SourceInterface {
 	public function __construct($filePath) {
 		$this->path = realpath($filePath);
 		if(!is_file($this->path))
-			throw new \TASoft\Config\Compiler\BadSourceException("File not found: $filePath", 190);
+			throw new BadSourceException("File not found: $filePath", 190);
 	}
 	
-	public function rewind() {
+	#[ReturnTypeWillChange] public function rewind() {
 		$this->pos = 0;
 	}
 	
-	public function next() {
+	#[ReturnTypeWillChange] public function next() {
 		$this->pos++;
 	}
 	
-	public function valid() {
+	#[ReturnTypeWillChange] public function valid() {
 		return $this->pos < 1;
 	}
 	
-	public function current() {
+	#[ReturnTypeWillChange] public function current() {
 		if($this->pos == 0)
 			return $this->path;
 		return NULL;
 	}
 	
-	public function key() {
+	#[ReturnTypeWillChange] public function key() {
 		return 'path';
 	}
 	
-	public function hasChildren() { return false; }
-	public function getChildren() { return NULL; }
+	#[ReturnTypeWillChange] public function hasChildren() { return false; }
+	#[ReturnTypeWillChange] public function getChildren() { return NULL; }
 }

@@ -23,5 +23,7 @@
 
 namespace TASoft\Config\Compiler\Source;
 
-interface SourceInterface extends \RecursiveIterator {
+use RecursiveIterator;
+
+interface SourceInterface extends RecursiveIterator {
 }

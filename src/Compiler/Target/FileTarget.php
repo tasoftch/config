@@ -110,7 +110,7 @@ EOT;
      */
     protected function doSerialized(Config $config, array $importedFiles) {
         $comment = $this->createDocComment($importedFiles);
-        $data = serialize( $config->toArray(true) );
+        $data = serialize( $config->toArray() );
 
         return <<< EOT
 <?php
@@ -128,7 +128,7 @@ EOT;
      */
     protected function doBase64(Config $config, array $importedFiles) {
         $comment = $this->createDocComment($importedFiles);
-        $data = var_export(base64_encode( serialize( $config->toArray(true) ) ), true);
+        $data = var_export(base64_encode( serialize( $config->toArray() ) ), true);
 
         return <<< EOT
 <?php
@@ -146,7 +146,7 @@ EOT;
      */
     protected function doPHP(Config $config, array $importedFiles) {
         $comment = $this->createDocComment($importedFiles);
-        $data = var_export($config->toArray(true), true);
+        $data = var_export($config->toArray(), true);
 
         return <<< EOT
 <?php
